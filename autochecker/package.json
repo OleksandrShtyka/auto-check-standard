@@ -1,0 +1,21 @@
+{
+  "name": "autochecker",
+  "displayName": "AutoChecker",
+  "description": "Boilerplate generator for frontend projects — creates .prettierrc, .eslintrc, .gitignore, VS Code settings & snippets in one command.",
+  "version": "0.0.1",
+  "publisher": "shtyka",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "autochecker.initFullArchitecture",
+        "title": "Init Full Architecture"
+      }
+    ]
+  }
+}

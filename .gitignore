@@ -1,0 +1,70 @@
+# --- DEPENDENCIES ---
+node_modules/
+.pnp/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+# Видаляємо сміття від pnpm та bun
+.pnpm-store/
+.bun/
+lock-woke.json
+
+# --- NEXT.JS & BUILD ---
+.next/
+out/
+build/
+dist/
+/public/build
+# Видаляємо кеш турбопака
+.turbo/
+
+# --- TESTING & COVERAGE ---
+coverage/
+.nyc_output/
+*.lcov
+
+# --- ENVIRONMENT & SECRETS (STRICT) ---
+# Жоден секрет не має витекти в паблік
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.cert
+.vercel
+
+# --- DEBUG & LOGS ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+pnpm-debug.log*
+
+# --- SYSTEM & EDITORS (ANTI-PAVLOV) ---
+.DS_Store
+Thumbs.db
+# Ігноруємо локальні налаштування VS Code, але лишаємо сніпети
+.vscode/*
+!.vscode/web-learning.code-snippets
+!.vscode/settings.json
+.idea/
+*.swp
+*.bak
+*.tmp
+
+# --- TYPESCRIPT ---
+*.tsbuildinfo
+# next-env.d.ts краще ігнорити, бо він генерується автоматично
+next-env.d.ts
+
+# --- PROJECT SPECIFIC ---
+# Твій Arch Swiss Knife та інші тулзи не мають бути в веб-репо
+arch_swiss_knife.py
+*.pyc
+__pycache__/
