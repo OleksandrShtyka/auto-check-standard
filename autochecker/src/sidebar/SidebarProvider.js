@@ -205,7 +205,7 @@ class SidebarProvider {
   <div class="header-brand">
     <div class="header-logo">⚡</div>
     <span class="header-name">AutoChecker</span>
-    <span class="header-version">v0.0.9</span>
+    <span class="header-version">v0.0.10</span>
   </div>
 </div>
 

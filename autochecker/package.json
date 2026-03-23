@@ -2,7 +2,7 @@
   "name": "autochecker",
   "displayName": "AutoChecker",
   "description": "Boilerplate generator for frontend projects — creates .prettierrc, .eslintrc, .gitignore, VS Code settings & snippets in one command.",
-  "version": "0.0.1",
+  "version": "0.0.10",
   "publisher": "shtyka",
   "engines": {
     "vscode": "^1.110.0"
