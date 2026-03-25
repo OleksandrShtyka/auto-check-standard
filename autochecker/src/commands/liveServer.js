@@ -62,6 +62,15 @@ function getMimeType(filePath) {
   return MIME_TYPES[ext] || 'application/octet-stream';
 }
 
+function htmlEscape(s) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function injectLiveReload(html) {
   if (html.includes('</body>')) {
     return html.replace('</body>', LIVE_RELOAD_SCRIPT + '</body>');
@@ -168,8 +177,12 @@ function startLiveServer() {
 
     const filePath = path.join(rootDir, urlPath);
 
-    // Security: prevent path traversal
-    if (!filePath.startsWith(rootDir)) {
+    // Security: prevent path traversal.
+    // Use path.resolve() + separator suffix to avoid prefix-match bypass
+    // (e.g. rootDir=/workspace would incorrectly allow /workspace-evil).
+    const resolvedRoot = path.resolve(rootDir);
+    const resolvedFile = path.resolve(filePath);
+    if (resolvedFile !== resolvedRoot && !resolvedFile.startsWith(resolvedRoot + path.sep)) {
       res.writeHead(403);
       res.end('Forbidden');
       return;
@@ -181,8 +194,9 @@ function startLiveServer() {
         const indexPath = path.join(filePath, 'index.html');
         fs.stat(indexPath, (err2, stats2) => {
           if (err2 || !stats2.isFile()) {
-            res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.end(`<h1>404</h1><p>${urlPath} not found</p>`);
+            res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+            // htmlEscape prevents XSS via crafted URLs (e.g. decoded %3Cscript%3E)
+            res.end(`<h1>404</h1><p>${htmlEscape(urlPath)} not found</p>`);
             return;
           }
           serveFile(indexPath, res);

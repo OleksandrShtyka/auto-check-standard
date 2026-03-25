@@ -35,7 +35,14 @@ async function killPort() {
       .trim()
       .split('\n')
       .map((l) => l.trim().split(/\s+/).pop())
-      .filter(Boolean);
+      // Validate each PID is strictly numeric before shell use
+      .filter((p) => /^\d+$/.test(p));
+
+    if (pids.length === 0) {
+      vscode.window.showInformationMessage(`AutoChecker: Nothing running on port ${port}.`);
+      return;
+    }
+
     const killCmd =
       platform === 'win32'
         ? pids.map((p) => `taskkill /PID ${p} /F`).join(' && ')

@@ -16,6 +16,19 @@ const { killPort, checkOutdated, wrapTryCatch, commentHeader } = require('./comm
 const { addBookmark, showBookmarks, clearBookmarks } = require('./commands/bookmarks');
 const { saveSnippet, insertSnippet } = require('./commands/snippets');
 const { generateReadme, editPackageScripts, generateEnv, packageQuickInstall, generateProjectTree } = require('./commands/projectTools');
+const {
+  insertPrint,
+  wrapTryExcept,
+  generatePythonClass,
+  generatePythonFunction,
+  sortPythonImports,
+  generateRequirements,
+  createVenv,
+  generatePythonRoute,
+  scanPythonTodos,
+  generateInitPy,
+  runPythonFile,
+} = require('./commands/pythonTools');
 const { SidebarProvider } = require('./sidebar/SidebarProvider');
 const { openHttpClient } = require('./sidebar/httpClient');
 
@@ -90,6 +103,18 @@ function activate(context) {
     vscode.commands.registerCommand('autochecker.editPackageScripts', editPackageScripts),
     // HTTP Client
     vscode.commands.registerCommand('autochecker.openHttpClient', () => openHttpClient(context)),
+    // Python Tools
+    vscode.commands.registerCommand('autochecker.py.insertPrint', insertPrint),
+    vscode.commands.registerCommand('autochecker.py.wrapTryExcept', wrapTryExcept),
+    vscode.commands.registerCommand('autochecker.py.generateClass', generatePythonClass),
+    vscode.commands.registerCommand('autochecker.py.generateFunction', generatePythonFunction),
+    vscode.commands.registerCommand('autochecker.py.sortImports', sortPythonImports),
+    vscode.commands.registerCommand('autochecker.py.generateRequirements', generateRequirements),
+    vscode.commands.registerCommand('autochecker.py.createVenv', createVenv),
+    vscode.commands.registerCommand('autochecker.py.generateRoute', generatePythonRoute),
+    vscode.commands.registerCommand('autochecker.py.scanTodos', scanPythonTodos),
+    vscode.commands.registerCommand('autochecker.py.generateInitPy', generateInitPy),
+    vscode.commands.registerCommand('autochecker.py.runFile', runPythonFile),
   );
 }
 

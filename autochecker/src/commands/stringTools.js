@@ -67,9 +67,20 @@ async function generatePassword() {
     secret = crypto.randomBytes(len).toString('base64').slice(0, len);
   } else {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    secret = Array.from(crypto.randomBytes(len))
-      .map((b) => chars[b % chars.length])
-      .join('');
+    // Rejection sampling: discard bytes that would cause modulo bias.
+    // 256 % 62 = 8, so bytes 248-255 are skipped to ensure uniform distribution.
+    const limit = 256 - (256 % chars.length);
+    const result = [];
+    while (result.length < len) {
+      const batch = crypto.randomBytes(len * 2);
+      for (const b of batch) {
+        if (b < limit) {
+          result.push(chars[b % chars.length]);
+          if (result.length === len) break;
+        }
+      }
+    }
+    secret = result.join('');
   }
 
   await vscode.env.clipboard.writeText(secret);

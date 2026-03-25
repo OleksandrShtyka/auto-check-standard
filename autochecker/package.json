@@ -15,6 +15,50 @@
       {
         "command": "autochecker.initFullArchitecture",
         "title": "Init Full Architecture"
+      },
+      {
+        "command": "autochecker.py.insertPrint",
+        "title": "Python: Insert Print Statement"
+      },
+      {
+        "command": "autochecker.py.wrapTryExcept",
+        "title": "Python: Wrap in Try/Except"
+      },
+      {
+        "command": "autochecker.py.generateClass",
+        "title": "Python: Generate Class"
+      },
+      {
+        "command": "autochecker.py.generateFunction",
+        "title": "Python: Generate Function"
+      },
+      {
+        "command": "autochecker.py.sortImports",
+        "title": "Python: Sort Imports"
+      },
+      {
+        "command": "autochecker.py.generateRequirements",
+        "title": "Python: Generate requirements.txt"
+      },
+      {
+        "command": "autochecker.py.createVenv",
+        "title": "Python: Create Virtual Environment"
+      },
+      {
+        "command": "autochecker.py.generateRoute",
+        "title": "Python: Generate Flask/FastAPI Route"
+      },
+      {
+        "command": "autochecker.py.scanTodos",
+        "title": "Python: Scan TODOs"
+      },
+      {
+        "command": "autochecker.py.generateInitPy",
+        "title": "Python: Generate __init__.py"
+      },
+      {
+        "command": "autochecker.py.runFile",
+        "title": "Python: Run File"
       }
     ]
   }

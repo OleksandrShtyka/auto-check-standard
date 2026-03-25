@@ -13,12 +13,18 @@ let httpClientPanel = null;
 let requestHistory = [];
 const HISTORY_FILE = '.vscode/autochecker-history.json';
 
+const MAX_HISTORY_ENTRIES = 50;
+const MAX_RESPONSE_BODY_BYTES = 10 * 1024 * 1024; // 10 MB
+
 function loadHistory(rootDir) {
   if (!rootDir) return [];
   const histPath = path.join(rootDir, HISTORY_FILE);
   try {
     if (fs.existsSync(histPath)) {
-      return JSON.parse(fs.readFileSync(histPath, 'utf-8'));
+      const raw = JSON.parse(fs.readFileSync(histPath, 'utf-8'));
+      // Guard against a manually inflated history file
+      if (!Array.isArray(raw)) return [];
+      return raw.slice(-MAX_HISTORY_ENTRIES);
     }
   } catch (_) {}
   return [];
@@ -28,8 +34,7 @@ function saveHistory(rootDir) {
   if (!rootDir) return;
   const histPath = path.join(rootDir, HISTORY_FILE);
   ensureDirSync(path.dirname(histPath));
-  // Keep last 50 entries
-  const trimmed = requestHistory.slice(-50);
+  const trimmed = requestHistory.slice(-MAX_HISTORY_ENTRIES);
   fs.writeFileSync(histPath, JSON.stringify(trimmed, null, 2), 'utf-8');
 }
 
@@ -519,8 +524,25 @@ function openHttpClient(context) {
 
           const req = lib.request(options, (res) => {
             const chunks = [];
-            res.on('data', (chunk) => chunks.push(chunk));
+            let receivedBytes = 0;
+            let bodyLimitExceeded = false;
+
+            res.on('data', (chunk) => {
+              receivedBytes += chunk.length;
+              if (receivedBytes > MAX_RESPONSE_BODY_BYTES) {
+                bodyLimitExceeded = true;
+                req.destroy();
+                httpClientPanel.webview.postMessage({
+                  type: 'error',
+                  message: `Response body exceeds ${MAX_RESPONSE_BODY_BYTES / 1024 / 1024} MB limit.`,
+                });
+                return;
+              }
+              chunks.push(chunk);
+            });
+
             res.on('end', () => {
+              if (bodyLimitExceeded) return;
               const body = Buffer.concat(chunks).toString('utf-8');
               const elapsed = Date.now() - startTime;
 
@@ -534,11 +556,15 @@ function openHttpClient(context) {
                 time: elapsed,
               });
 
-              // Save to history
+              // Save to history — strip Authorization header to avoid
+              // storing Bearer tokens / API keys in plaintext on disk.
+              const safeHeaders = { ...msg.headers };
+              delete safeHeaders['Authorization'];
+              delete safeHeaders['authorization'];
               const entry = {
                 method: msg.method,
                 url: msg.url,
-                headers: msg.headers,
+                headers: safeHeaders,
                 body: msg.body,
                 status: res.statusCode,
                 time: new Date().toISOString(),
