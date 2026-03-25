@@ -8,7 +8,7 @@ All notable changes to **AutoChecker** VS Code extension.
 
 ## [0.0.11] — 2026-03-25
 
-### 🐍 Python Tools (11 new commands)
+### 🐍 Python Tools (11 new commands for script)
 
 - **Insert print()** — Turbo Console Log for Python, inserts `print(f"🔥 DF: filename:line → var=", var)` with auto-detected variable under cursor (`Cmd+Alt+P` in `.py` files)
 - **Wrap try/except** — wraps selected code in try/except with `traceback.print_exc()`
